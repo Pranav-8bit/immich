@@ -12,6 +12,7 @@ import {
   Colorspace,
   CQMode,
   ImageFormat,
+  ImmichEnvironment,
   LogLevel,
   ToneMapping,
   TranscodeHWAccel,
@@ -20,7 +21,7 @@ import {
   VideoContainer,
 } from 'src/enum';
 import { ConcurrentQueueName, QueueName } from 'src/interfaces/job.interface';
-import { ImageOutputConfig } from 'src/interfaces/media.interface';
+import { ImageOptions } from 'src/interfaces/media.interface';
 
 export interface SystemConfig {
   ffmpeg: {
@@ -110,8 +111,8 @@ export interface SystemConfig {
     template: string;
   };
   image: {
-    thumbnail: ImageOutputConfig;
-    preview: ImageOutputConfig;
+    thumbnail: ImageOptions;
+    preview: ImageOptions;
     colorspace: Colorspace;
     extractEmbedded: boolean;
   };
@@ -322,7 +323,10 @@ export const immichAppConfig: ConfigModuleOptions = {
   envFilePath: '.env',
   isGlobal: true,
   validationSchema: Joi.object({
-    IMMICH_ENV: Joi.string().optional().valid('development', 'testing', 'production').default('production'),
+    IMMICH_ENV: Joi.string()
+      .optional()
+      .valid(...Object.values(ImmichEnvironment))
+      .default(ImmichEnvironment.PRODUCTION),
     IMMICH_LOG_LEVEL: Joi.string()
       .optional()
       .valid(...Object.values(LogLevel)),
@@ -415,6 +419,10 @@ export const getBuildMetadata = () => ({
   sourceRef: process.env.IMMICH_SOURCE_REF,
   sourceCommit: process.env.IMMICH_SOURCE_COMMIT,
   sourceUrl: process.env.IMMICH_SOURCE_URL,
+  thirdPartySourceUrl: process.env.IMMICH_THIRD_PARTY_SOURCE_URL,
+  thirdPartyBugFeatureUrl: process.env.IMMICH_THIRD_PARTY_BUG_FEATURE_URL,
+  thirdPartyDocumentationUrl: process.env.IMMICH_THIRD_PARTY_DOCUMENTATION_URL,
+  thirdPartySupportUrl: process.env.IMMICH_THIRD_PARTY_SUPPORT_URL,
 });
 
 const clientLicensePublicKeyProd =
